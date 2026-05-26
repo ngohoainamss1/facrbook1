@@ -9,7 +9,7 @@ let minute = 0;
 setInterval(() => {
     minute++;
     let date = new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
-    serverLogs.push(`Phút thứ: ${minute} --- Chạy lúc: ${date}`);
+    console.log(`Phút thứ: ${minute} --- Chạy lúc: ${date}`);
     if (serverLogs.length > 100) serverLogs.shift(); // Giới hạn bộ nhớ
 }, 60000);
 
