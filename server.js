@@ -2,6 +2,22 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ================= BỘ ĐẾM KIỂM TRA NGỦ LÀM THÊM =================
+let serverLogs = [];
+let minute = 0;
+
+setInterval(() => {
+    minute++;
+    let date = new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
+    serverLogs.push(`Phút thứ: ${minute} --- Chạy lúc: ${date}`);
+    if (serverLogs.length > 100) serverLogs.shift(); // Giới hạn bộ nhớ
+}, 60000);
+
+app.get('/check', (req, res) => {
+    res.send(serverLogs.join('<br>'));
+});
+// =================================================================
+
 // Cơ chế chuyển hướng thẳng, tốc độ tối đa cho mọi lượt truy cập
 app.get('/share/:shopeeId', (req, res) => {
     const shopeeId = req.params.shopeeId;
