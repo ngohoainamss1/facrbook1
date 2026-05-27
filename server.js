@@ -23,10 +23,18 @@ app.get('/share/:shopeeId', (req, res) => {
     const shopeeId = req.params.shopeeId;
     const targetUrl = `https://s.shopee.vn/${shopeeId}`;
     
-    // Chống cache để đảm bảo link luôn cập nhật mới nhất từ server
+    const userAgent = req.headers['user-agent'] || '';
+    const isFbBot = userAgent.toLowerCase().includes('facebookexternalhit') || 
+                    userAgent.toLowerCase().includes('facebot') ||
+                    userAgent.toLowerCase().includes('crawler');
+
+    // Nếu là Bot FB quét link, trả về trang trống (hoặc 200 OK) để nó không chạy tiếp
+    if (isFbBot) {
+        return res.status(200).send('OK');
+    }
+
+    // Người thật click thì mới cho đi tiếp sang Shopee
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-    
-    // Bắn thẳng HTTP 302 sang Shopee (Không tải HTML, không chạy JS, không tốn thời gian xử lý)
     return res.redirect(302, targetUrl);
 });
 
